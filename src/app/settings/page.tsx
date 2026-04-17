@@ -64,7 +64,6 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id']
 
-<<<<<<< HEAD
 /* ─── Key mapping utilities ──────────────────────────────────── */
 function snakeToCamel(str: string): string {
   return str.replace(/_([a-z])/g, (_, l) => l.toUpperCase())
@@ -82,8 +81,6 @@ function convertSettingsKeys(obj: Record<string, any>, converter: (s: string) =>
   return result
 }
 
-=======
->>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
 /* ─── Framer variants ────────────────────────────────────────── */
 const tabVariants = {
   hidden:  { opacity: 0, y: 10 },
@@ -119,14 +116,10 @@ export default function SettingsPage() {
       const res = await fetch('/api/settings')
       if (res.ok) {
         const data = await res.json()
-<<<<<<< HEAD
         const camelData = Object.fromEntries(
           Object.entries(data).map(([k, v]) => [snakeToCamel(k), v])
         )
         setSettings(s => ({ ...s, ...camelData }))
-=======
-        setSettings(s => ({ ...s, ...data }))
->>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
       }
     } catch (err) {
       console.error('Failed to load settings', err)
@@ -142,18 +135,11 @@ export default function SettingsPage() {
     setSaving(true)
     setSaveOk(false)
     try {
-<<<<<<< HEAD
       const snakeSettings = convertSettingsKeys(settings, camelToSnake)
       await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(snakeSettings),
-=======
-      await fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
->>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
       })
       // Apply theme immediately after save
       if (settings.theme) setTheme(settings.theme as Theme)
@@ -176,19 +162,12 @@ export default function SettingsPage() {
     setSmtpTesting(true)
     setSmtpResult(null)
     try {
-<<<<<<< HEAD
       const snakeSettings = convertSettingsKeys(settings, camelToSnake)
       const payload = { ...snakeSettings, testEmail }
       const res = await fetch('/api/settings/test-smtp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-=======
-      const res = await fetch('/api/settings/test-smtp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...settings, testEmail }),
->>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
       })
       const data = await res.json()
       setSmtpResult(res.ok

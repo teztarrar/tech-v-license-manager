@@ -31,18 +31,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-<<<<<<< HEAD
     const body = await req.json()
     const to = body.to || body.testEmail
 
     if (!to || typeof to !== 'string' || !to.includes('@')) {
       return NextResponse.json({ error: 'Valid recipient email required' }, { status: 400 })
-=======
-    const { to } = await req.json()
-
-    if (!to) {
-      return NextResponse.json({ error: 'Recipient email required' }, { status: 400 })
->>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
     }
 
     const cfg = await getSmtpConfig()
