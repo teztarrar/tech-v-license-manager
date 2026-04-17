@@ -77,9 +77,14 @@ export default function DashboardPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)"/>
                   <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false}/>
                   <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false}/>
+<<<<<<< HEAD
                   <Tooltip content={<CustomTooltip />} wrapperStyle={{background: 'transparent', border: 'none'}} cursor={false}/>
                   <Area type="monotone" dataKey="expiring" name="Expiring" stroke="#6366f1" fill="url(#expGrad)" strokeWidth={2}
                     isAnimationActive animationDuration={900} animationEasing="ease-out" animationBegin={80}/>
+=======
+                  <Tooltip content={<CustomTooltip />}/>
+                  <Area type="monotone" dataKey="expiring" name="Expiring" stroke="#6366f1" fill="url(#expGrad)" strokeWidth={2}/>
+>>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -91,13 +96,21 @@ export default function DashboardPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={productDistribution} cx="50%" cy="50%" innerRadius={45} outerRadius={75}
+<<<<<<< HEAD
                     dataKey="value" nameKey="name" paddingAngle={3}
                     isAnimationActive animationDuration={900} animationEasing="ease-out" animationBegin={120}>
+=======
+                    dataKey="value" nameKey="name" paddingAngle={3}>
+>>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
                     {productDistribution?.map((_: any, i: number) => (
                       <Cell key={i} fill={COLORS[i % COLORS.length]} />
                     ))}
                   </Pie>
+<<<<<<< HEAD
                   <Tooltip content={<CustomTooltip />} wrapperStyle={{background: 'transparent', border: 'none'}} cursor={false}/>
+=======
+                  <Tooltip content={<CustomTooltip />}/>
+>>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
                   <Legend iconSize={8} wrapperStyle={{ fontSize: '11px', color: '#9ca3af' }}/>
                 </PieChart>
               </ResponsiveContainer>
@@ -116,9 +129,14 @@ export default function DashboardPage() {
                   <XAxis dataKey="name" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false}/>
                   <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false}
                     tickFormatter={v => `$${(v/1000).toFixed(0)}k`}/>
+<<<<<<< HEAD
                   <Tooltip content={<CustomTooltip />} wrapperStyle={{background: 'transparent', border: 'none'}} cursor={false}/>
                   <Bar dataKey="revenue" name="Revenue ($)" radius={[4,4,0,0]}
                     isAnimationActive animationDuration={900} animationEasing="ease-out" animationBegin={100}>
+=======
+                  <Tooltip content={<CustomTooltip />}/>
+                  <Bar dataKey="revenue" name="Revenue ($)" radius={[4,4,0,0]}>
+>>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
                     {revenue?.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]}/>)}
                   </Bar>
                 </BarChart>
@@ -134,12 +152,20 @@ export default function DashboardPage() {
               {recentLicenses?.length === 0 && (
                 <p className="px-6 py-4 text-sm text-gray-500">No licenses yet</p>
               )}
+<<<<<<< HEAD
               {recentLicenses?.map((lic: any, i: number) => (
                 <motion.div
                   key={lic.id}
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.35, ease: 'easeOut', delay: i * 0.04 }}
+=======
+              {recentLicenses?.map((lic: any) => (
+                <motion.div
+                  key={lic.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+>>>>>>> 3469a1f8813ccd2283d1aa59e9f820c5454a3eaa
                   className="flex items-center justify-between px-6 py-3.5 hover:bg-card-hover transition-colors"
                 >
                   <div className="min-w-0">
