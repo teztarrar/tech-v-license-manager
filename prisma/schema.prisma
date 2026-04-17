@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String     @id @default(cuid())
+  name             String
+  email            String     @unique
+  password         String
+  role             String     @default("VIEWER")
+  twoFactorEnabled Boolean    @default(false)
+  twoFactorSecret  String?
+  workspaceId      String?
+  workspace        Workspace? @relation(fields: [workspaceId], references: [id])
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Workspace {
+  id        String    @id @default(cuid())
+  name      String
+  users     User[]
+  licenses  License[]
+  products  Product[]
+  companies Company[]
+  settings  Setting[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Company {
+  id            String     @id @default(cuid())
+  name          String
+  location      String?
+  contactPerson String?
+  email         String?
+  phone         String?
+  workspaceId   String?
+  workspace     Workspace? @relation(fields: [workspaceId], references: [id])
+  licenses      License[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Product {
+  id           String     @id @default(cuid())
+  name         String
+  vendor       String?
+  licenseType  String?
+  renewalCycle String?
+  price        Float?
+  workspaceId  String?
+  workspace    Workspace? @relation(fields: [workspaceId], references: [id])
+  licenses     License[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model License {
+  id            String         @id @default(cuid())
+  licenseKey    String         @unique
+  serialNumber  String?
+  status        String         @default("ACTIVE")
+  location      String?
+  purchaseDate  DateTime?
+  expiryDate    DateTime?
+  notes         String?
+  companyId     String?
+  company       Company?       @relation(fields: [companyId], references: [id])
+  productId     String?
+  product       Product?       @relation(fields: [productId], references: [id])
+  workspaceId   String?
+  workspace     Workspace?     @relation(fields: [workspaceId], references: [id])
+  notifications Notification[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  licenseId String?
+  license   License? @relation(fields: [licenseId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id          String     @id @default(cuid())
+  key         String
+  value       String
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([key, workspaceId])
+}

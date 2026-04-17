@@ -1,0 +1,4 @@
+licenseKey,serialNumber,location,purchaseDate,expiryDate,notes
+XXXX-YYYY-ZZZZ-AAAA-0001,SN-IMPORT-001,Server Room A,2024-01-01,2025-01-01,Imported via CSV
+ABCD-EFGH-IJKL-MNOP-0002,SN-IMPORT-002,Finance Dept,2024-03-15,2025-03-15,Annual subscription
+QRST-UVWX-YZ12-3456-0003,,Remote Office,2024-06-01,2024-12-31,Short term license
