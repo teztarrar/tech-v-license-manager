@@ -400,6 +400,22 @@ const THEME_OPTIONS: { id: Theme; label: string; desc: string; icon: typeof Sun;
     previewBg: 'bg-[#04050e] border border-[#00ffaa]/20',
     iconColor: 'text-[#00ffaa]',
   },
+  {
+    id: 'midnight',
+    label: 'Midnight',
+    desc: 'Aurora • violet',
+    icon: Moon,
+    previewBg: 'bg-[#02040a] border border-[#8b5cf6]/20',
+    iconColor: 'text-[#a78bfa]',
+  },
+  {
+    id: 'ocean',
+    label: 'Ocean',
+    desc: 'Abyss • cyan',
+    icon: Palette,
+    previewBg: 'bg-[#020617] border border-[#06b6d4]/20',
+    iconColor: 'text-[#06b6d4]',
+  },
 ]
 
 function AppearanceTab({ currentTheme, onThemeSelect, onSave, saving }: AppearanceProps) {

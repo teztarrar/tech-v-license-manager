@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Modal, Button, Input, Select, Card, EmptyState } from '@/components/ui'
 import { Plus, Edit2, Trash2, Package, DollarSign, Tag, RefreshCw } from 'lucide-react'
-import PageSpinner from '@/components/PageSpinner'
+import { PageSpinner } from '@/components/ui'
 
 interface Product { id:string; name:string; vendor?:string|null; licenseType?:string|null; renewalCycle?:string|null; price?:number|null; _count?:{licenses:number}; createdAt:string }
 const emptyForm = { name:'', vendor:'', licenseType:'', renewalCycle:'', price:'' }

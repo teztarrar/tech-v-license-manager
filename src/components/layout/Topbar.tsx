@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bell, Search, ChevronDown, CheckCheck, Settings } from 'lucide-react'
+import { Bell, ChevronDown, CheckCheck, Settings } from 'lucide-react'
 import Link from 'next/link'
+import { CommandPalette } from '@/components/CommandPalette'
 
 interface Notif { id: string; type: string; message: string; read: boolean; createdAt: string }
 
@@ -49,19 +50,9 @@ export function Topbar({ title }: { title?: string }) {
         <h1 className="text-base font-semibold text-[var(--text-primary)] mr-2 hidden sm:block">{title}</h1>
       )}
 
-      {/* Search */}
-      <div className="flex-1 max-w-sm relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
-        <input
-          placeholder="Search licenses, companies…"
-          className="w-full pl-9 pr-4 py-2 rounded-xl text-sm transition-all
-                     focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
-          style={{
-            background: 'var(--bg-input)',
-            border: '1px solid var(--border-subtle)',
-            color: 'var(--text-primary)',
-          }}
-        />
+      {/* Command Palette Search */}
+      <div className="flex-1 max-w-sm">
+        <CommandPalette />
       </div>
 
       <div className="flex items-center gap-1 ml-auto">

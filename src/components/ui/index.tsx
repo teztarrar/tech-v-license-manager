@@ -1,7 +1,155 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Loader2, Check } from 'lucide-react'
-import React from 'react'
+import { X, Loader2, CheckCircle2, XCircle, Info } from 'lucide-react'
+import React, { createContext, useContext, useState, useCallback } from 'react'
+
+/* ══════════════════════════════════════════════════════════════
+   TOAST SYSTEM
+══════════════════════════════════════════════════════════════ */
+
+interface Toast {
+  id: string
+  message: string
+  type: 'success' | 'error' | 'info'
+  duration?: number
+}
+
+interface ToastContextValue {
+  addToast: (message: string, type?: Toast['type'], duration?: number) => void
+}
+
+const ToastContext = createContext<ToastContextValue>({ addToast: () => {} })
+
+export const useToast = () => useContext(ToastContext)
+
+export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const [toasts, setToasts] = useState<Toast[]>([])
+
+  const addToast = useCallback((message: string, type: Toast['type'] = 'info', duration = 3500) => {
+    const id = Math.random().toString(36).slice(2, 9)
+    setToasts(prev => [...prev, { id, message, type, duration }])
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id))
+    }, duration)
+  }, [])
+
+  return (
+    <ToastContext.Provider value={{ addToast }}>
+      {children}
+      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
+        <AnimatePresence>
+          {toasts.map(t => (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, x: 40, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 40, scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              className="pointer-events-auto"
+            >
+              <div
+                className={[
+                  'flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border text-sm font-medium min-w-[280px] max-w-[400px]',
+                  t.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' :
+                  t.type === 'error'   ? 'bg-red-500/10 border-red-500/20 text-red-400' :
+                  'bg-[var(--bg-card)] border-[var(--border-subtle)] text-[var(--text-primary)]',
+                ].join(' ')}
+                style={{ backdropFilter: 'blur(12px)' }}
+              >
+                {t.type === 'success' && <CheckCircle2 size={16} className="flex-shrink-0" />}
+                {t.type === 'error' && <XCircle size={16} className="flex-shrink-0" />}
+                {t.type === 'info' && <Info size={16} className="flex-shrink-0 text-[var(--brand-500)]" />}
+                <span className="flex-1">{t.message}</span>
+                <button
+                  onClick={() => setToasts(prev => prev.filter(x => x.id !== t.id))}
+                  className="p-1 rounded hover:bg-white/5 transition-colors flex-shrink-0"
+                >
+                  <X size={13} />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </ToastContext.Provider>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKELETON COMPONENTS
+══════════════════════════════════════════════════════════════ */
+
+export function Skeleton({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
+  return <div className={`skeleton ${className}`} style={style} />
+}
+
+export function SkeletonCard() {
+  return (
+    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-5 space-y-3">
+      <div className="flex items-start justify-between">
+        <Skeleton className="h-3 w-24" />
+        <Skeleton className="h-8 w-8 rounded-xl" />
+      </div>
+      <Skeleton className="h-8 w-16" />
+      <Skeleton className="h-2.5 w-32" />
+    </div>
+  )
+}
+
+export function SkeletonTable({ rows = 5, cols = 6 }: { rows?: number; cols?: number }) {
+  return (
+    <div className="space-y-2 px-4 py-3">
+      <div className="flex gap-4 pb-2">
+        {Array.from({ length: cols }).map((_, i) => (
+          <Skeleton key={`h-${i}`} className="h-3 flex-1" />
+        ))}
+      </div>
+      {Array.from({ length: rows }).map((_, r) => (
+        <div key={r} className="flex gap-4 py-2">
+          {Array.from({ length: cols }).map((_, c) => (
+            <Skeleton key={`${r}-${c}`} className="h-3.5 flex-1" style={{ opacity: 0.5 + (c % 2) * 0.2 }} />
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export function SkeletonChart() {
+  return (
+    <div className="p-4 h-56 space-y-3">
+      <Skeleton className="h-full w-full rounded-xl" />
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ANIMATED COUNTER
+══════════════════════════════════════════════════════════════ */
+
+export function AnimatedCounter({ value, duration = 1200 }: { value: number; duration?: number }) {
+  const [display, setDisplay] = useState(0)
+
+  React.useEffect(() => {
+    const start = performance.now()
+    const from = display
+    const to = value
+    if (from === to) return
+
+    let raf: number
+    function tick(now: number) {
+      const elapsed = now - start
+      const progress = Math.min(elapsed / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 4)
+      setDisplay(Math.round(from + (to - from) * eased))
+      if (progress < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [value, duration])
+
+  return <>{display.toLocaleString()}</>
+}
 
 /* ══════════════════════════════════════════════════════════════
    MODAL
@@ -82,10 +230,10 @@ export function Button({
   const base = 'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed select-none'
 
   const variants: Record<ButtonVariant, string> = {
-    primary:   'bg-[var(--brand-600)] hover:bg-[var(--brand-500)] text-white focus-visible:ring-indigo-500',
-    secondary: 'bg-[var(--bg-input)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] border border-[var(--border-medium)] focus-visible:ring-indigo-500',
+    primary:   'bg-[var(--brand-600)] hover:bg-[var(--brand-500)] text-white focus-visible:ring-[var(--brand-500)]',
+    secondary: 'bg-[var(--bg-input)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] border border-[var(--border-medium)] focus-visible:ring-[var(--brand-500)]',
     danger:    'bg-red-600 hover:bg-red-500 text-white focus-visible:ring-red-500',
-    ghost:     'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus-visible:ring-indigo-500',
+    ghost:     'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus-visible:ring-[var(--brand-500)]',
     success:   'bg-green-600 hover:bg-green-500 text-white focus-visible:ring-green-500',
   }
   const sizes: Record<ButtonSize, string> = {
@@ -198,14 +346,14 @@ export function Select({
 /* ══════════════════════════════════════════════════════════════
    BADGE — license status
 ══════════════════════════════════════════════════════════════ */
-export function Badge({ status }: { status: string }) {
+export const Badge = React.memo(function Badge({ status }: { status: string }) {
   const map: Record<string, string> = {
     ACTIVE:   'bg-[var(--status-active-bg)]   text-[var(--status-active-text)]   border border-[var(--status-active-border)]',
     EXPIRING: 'bg-[var(--status-expiring-bg)] text-[var(--status-expiring-text)] border border-[var(--status-expiring-border)]',
     EXPIRED:  'bg-[var(--status-expired-bg)]  text-[var(--status-expired-text)]  border border-[var(--status-expired-border)]',
     RENEWED:  'bg-blue-500/10 text-blue-400 border border-blue-500/20',
     ADMIN:    'bg-purple-500/10 text-purple-400 border border-purple-500/20',
-    MANAGER:  'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+    MANAGER:  'bg-[var(--brand-500)]/10 text-[var(--brand-500)] border border-[var(--brand-500)]/20',
     VIEWER:   'bg-gray-500/10 text-gray-400 border border-gray-500/20',
   }
   return (
@@ -213,18 +361,18 @@ export function Badge({ status }: { status: string }) {
       {status}
     </span>
   )
-}
+})
 
 /* ══════════════════════════════════════════════════════════════
    STAT CARD
 ══════════════════════════════════════════════════════════════ */
 type StatColor = 'brand' | 'green' | 'yellow' | 'red' | 'blue'
 
-export function StatCard({
+export const StatCard = React.memo(function StatCard({
   title, value, icon, color = 'brand', subtitle,
 }: {
   title: string
-  value: number | string
+  value: React.ReactNode
   icon: React.ReactNode
   color?: StatColor
   subtitle?: string
@@ -256,7 +404,7 @@ export function StatCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2, transition: { duration: 0.15 } }}
-      className={`bg-[var(--bg-card)] border ${ring[color]} rounded-2xl p-5 flex flex-col gap-3`}
+      className={`bg-[var(--bg-card)] border ${ring[color]} rounded-2xl p-5 flex flex-col gap-3 card-hover`}
     >
       <div className="flex items-start justify-between">
         <p className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">{title}</p>
@@ -268,12 +416,12 @@ export function StatCard({
       </div>
     </motion.div>
   )
-}
+})
 
 /* ══════════════════════════════════════════════════════════════
    CARD
 ══════════════════════════════════════════════════════════════ */
-export function Card({
+export const Card = React.memo(function Card({
   children, className = '', title, action,
 }: {
   children: React.ReactNode
@@ -285,7 +433,7 @@ export function Card({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden ${className}`}
+      className={`bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden card-hover ${className}`}
     >
       {title && (
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
@@ -296,7 +444,7 @@ export function Card({
       {children}
     </motion.div>
   )
-}
+})
 
 /* ══════════════════════════════════════════════════════════════
    EMPTY STATE

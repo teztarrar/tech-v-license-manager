@@ -1,7 +1,7 @@
 'use client'
 import { createContext, useContext, useEffect, useState } from 'react'
 
-export type Theme = 'dark' | 'light' | 'neon'
+export type Theme = 'dark' | 'light' | 'neon' | 'midnight' | 'ocean'
 
 interface ThemeContextValue {
   theme: Theme
@@ -19,7 +19,7 @@ export const useTheme = () => useContext(ThemeContext)
 function applyTheme(t: Theme) {
   const html = document.documentElement
   // Remove all theme classes first
-  html.classList.remove('theme-dark', 'theme-light', 'theme-neon')
+  html.classList.remove('theme-dark', 'theme-light', 'theme-neon', 'theme-midnight', 'theme-ocean')
   // Add the new one
   html.classList.add(`theme-${t}`)
   // Persist
@@ -28,21 +28,32 @@ function applyTheme(t: Theme) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('dark')
+  const [mounted, setMounted] = useState(false)
 
   // On mount: read saved theme, apply immediately (before any paint)
   useEffect(() => {
     let saved: Theme = 'dark'
     try {
       const raw = localStorage.getItem('techv_theme')
-      if (raw === 'light' || raw === 'neon' || raw === 'dark') saved = raw
+    if (raw === 'light' || raw === 'neon' || raw === 'midnight' || raw === 'dark' || raw === 'ocean') saved = raw
     } catch {}
     applyTheme(saved)
     setThemeState(saved)
+    setMounted(true)
   }, [])
 
   function setTheme(t: Theme) {
     applyTheme(t)
     setThemeState(t)
+  }
+
+  // Prevent flash of unstyled content
+  if (!mounted) {
+    return (
+      <div style={{ visibility: 'hidden' }}>
+        {children}
+      </div>
+    )
   }
 
   return (
@@ -51,3 +62,4 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     </ThemeContext.Provider>
   )
 }
+
