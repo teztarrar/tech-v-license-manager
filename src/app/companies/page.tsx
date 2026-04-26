@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Modal, Button, Input, Card, EmptyState, PageSpinner } from '@/components/ui'
 import { Plus, Edit2, Trash2, Building2, Mail, Phone, MapPin, User } from 'lucide-react'
@@ -77,8 +76,7 @@ export default function CompaniesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filtered.map((c, i) => (
-              <motion.div key={c.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:i*0.05}}
-                className="bg-card border border-card-border rounded-2xl p-5 hover:border-brand-500/30 transition-colors group">
+              <div key={c.id} className="bg-card border border-card-border rounded-2xl p-5 hover:border-brand-500/30 transition-colors group slide-up">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600/20 to-brand-800/10 border border-brand-500/20 flex items-center justify-center text-brand-400 font-bold text-lg">
@@ -100,7 +98,7 @@ export default function CompaniesPage() {
                   {c.email && <div className="flex items-center gap-2 text-xs text-gray-400"><Mail size={12} className="text-gray-600"/><a href={`mailto:${c.email}`} className="hover:text-brand-400 transition-colors">{c.email}</a></div>}
                   {c.phone && <div className="flex items-center gap-2 text-xs text-gray-400"><Phone size={12} className="text-gray-600"/>{c.phone}</div>}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}

@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Modal, Button, Select, Card, Badge, EmptyState, PageSpinner } from '@/components/ui'
 import { RefreshCw, AlertTriangle, XCircle, Clock, CheckCircle } from 'lucide-react'
@@ -44,7 +43,7 @@ export default function RenewalsPage() {
       <div className="space-y-5">
         {/* Summary cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-5">
+          <div className="slide-up bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-5">
             <div className="flex items-center gap-3">
               <AlertTriangle className="text-yellow-400" size={20}/>
               <div>
@@ -52,8 +51,8 @@ export default function RenewalsPage() {
                 <p className="text-xs text-yellow-400">Expiring Soon</p>
               </div>
             </div>
-          </motion.div>
-          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.05}} className="bg-red-500/10 border border-red-500/20 rounded-2xl p-5">
+          </div>
+          <div className="slide-up stagger-1 bg-red-500/10 border border-red-500/20 rounded-2xl p-5">
             <div className="flex items-center gap-3">
               <XCircle className="text-red-400" size={20}/>
               <div>
@@ -61,8 +60,8 @@ export default function RenewalsPage() {
                 <p className="text-xs text-red-400">Expired</p>
               </div>
             </div>
-          </motion.div>
-          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="bg-brand-500/10 border border-brand-500/20 rounded-2xl p-5">
+          </div>
+          <div className="slide-up stagger-2 bg-brand-500/10 border border-brand-500/20 rounded-2xl p-5">
             <div className="flex items-center gap-3">
               <Clock className="text-brand-400" size={20}/>
               <div>
@@ -70,7 +69,7 @@ export default function RenewalsPage() {
                 <p className="text-xs text-brand-400">Need Attention</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -102,7 +101,7 @@ export default function RenewalsPage() {
                     const days = getDaysUntilExpiry(lic.expiryDate)
                     const urgency = days === null ? 'gray' : days < 0 ? 'red' : days <= 7 ? 'red' : days <= 30 ? 'yellow' : 'green'
                     return (
-                      <motion.tr key={lic.id} initial={{opacity:0,x:-8}} animate={{opacity:1,x:0}} transition={{delay:i*0.04}}>
+                      <tr key={lic.id}>
                         <td><span className="font-mono text-xs text-card-text">{lic.licenseKey}</span></td>
                         <td className="text-gray-300">{lic.company?.name||'—'}</td>
                         <td className="text-gray-300">{lic.product?.name||'—'}</td>
@@ -127,7 +126,7 @@ export default function RenewalsPage() {
                             </Button>
                           </div>
                         </td>
-                      </motion.tr>
+                      </tr>
                     )
                   })}
                 </tbody>

@@ -390,6 +390,16 @@ body {
 
 * { box-sizing: border-box; }
 
+/* ─── Performance helpers ────────────────────────────── */
+.gpu-layer {
+  will-change: transform;
+  transform: translateZ(0);
+}
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
 /* ─── Smooth theme transition ────────────────────────── */
 html, body, .bg-main, .bg-sidebar, .bg-card, .bg-topbar, .bg-modal, .bg-input {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -537,4 +547,182 @@ html.theme-light .glass {
 .stagger-4 { animation-delay: 0.2s; }
 .stagger-5 { animation-delay: 0.25s; }
 .stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PERFORMANCE-FOCUSED CSS ANIMATIONS (GPU-accelerated)
+═══════════════════════════════════════════════════════════════ */
+
+/* ─── Page entrance ──────────────────────────────────── */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Card stagger container ─────────────────────────── */
+@keyframes card-stagger {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card-stagger > * {
+  opacity: 0;
+  animation: card-stagger 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.card-stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.card-stagger > *:nth-child(2) { animation-delay: 0.05s; }
+.card-stagger > *:nth-child(3) { animation-delay: 0.08s; }
+.card-stagger > *:nth-child(4) { animation-delay: 0.11s; }
+.card-stagger > *:nth-child(5) { animation-delay: 0.14s; }
+.card-stagger > *:nth-child(6) { animation-delay: 0.17s; }
+.card-stagger > *:nth-child(7) { animation-delay: 0.20s; }
+.card-stagger > *:nth-child(8) { animation-delay: 0.23s; }
+.card-stagger > *:nth-child(9) { animation-delay: 0.26s; }
+.card-stagger > *:nth-child(10) { animation-delay: 0.29s; }
+.card-stagger > *:nth-child(11) { animation-delay: 0.32s; }
+.card-stagger > *:nth-child(12) { animation-delay: 0.35s; }
+
+/* ─── Table row fade ─────────────────────────────────── */
+@keyframes row-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.row-fade tbody tr {
+  opacity: 0;
+  animation: row-fade 0.2s ease forwards;
+}
+.row-fade tbody tr:nth-child(1) { animation-delay: 0.01s; }
+.row-fade tbody tr:nth-child(2) { animation-delay: 0.02s; }
+.row-fade tbody tr:nth-child(3) { animation-delay: 0.03s; }
+.row-fade tbody tr:nth-child(4) { animation-delay: 0.04s; }
+.row-fade tbody tr:nth-child(5) { animation-delay: 0.05s; }
+.row-fade tbody tr:nth-child(6) { animation-delay: 0.06s; }
+.row-fade tbody tr:nth-child(7) { animation-delay: 0.07s; }
+.row-fade tbody tr:nth-child(8) { animation-delay: 0.08s; }
+.row-fade tbody tr:nth-child(9) { animation-delay: 0.09s; }
+.row-fade tbody tr:nth-child(10) { animation-delay: 0.10s; }
+
+/* ─── Notification bell shake ────────────────────────── */
+@keyframes bell-shake {
+  0%, 100% { transform: rotate(0); }
+  10% { transform: rotate(8deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(6deg); }
+  40% { transform: rotate(-6deg); }
+  50% { transform: rotate(3deg); }
+  60% { transform: rotate(-3deg); }
+  70% { transform: rotate(1deg); }
+  80% { transform: rotate(-1deg); }
+}
+.bell-shake {
+  animation: bell-shake 0.6s ease-in-out;
+  transform-origin: top center;
+}
+
+/* ─── Progress bar ───────────────────────────────────── */
+@keyframes progress-fill {
+  from { width: 0%; }
+}
+.progress-fill {
+  animation: progress-fill 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Tab underline slide ────────────────────────────── */
+@keyframes tab-slide {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ─── Dropdown slide ─────────────────────────────────── */
+@keyframes dropdown-slide {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dropdown-enter {
+  animation: dropdown-slide 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Sidebar collapse ───────────────────────────────── */
+.sidebar-transition {
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sidebar-label {
+  transition: opacity 0.15s ease, width 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ─── Button active press ────────────────────────────── */
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+/* ─── Modal backdrop ─────────────────────────────────── */
+@keyframes modal-backdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.modal-backdrop {
+  animation: modal-backdrop 0.15s ease forwards;
+}
+
+/* ─── Modal content ──────────────────────────────────── */
+@keyframes modal-content {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-content {
+  animation: modal-content 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Pulse ring for alerts ──────────────────────────── */
+@keyframes ping-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.ping-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: ping-ring 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  z-index: -1;
+}
+
+/* ─── Mobile FAB ─────────────────────────────────────── */
+@keyframes fab-enter {
+  from { opacity: 0; transform: scale(0.8) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.fab-enter {
+  animation: fab-enter 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Smooth scrollbar for tables ────────────────────── */
+.table-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.table-scroll::-webkit-scrollbar { height: 4px; }
+.table-scroll::-webkit-scrollbar-track { background: transparent; }
+.table-scroll::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
+
+/* ─── Reduce motion preference ───────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Print styles ───────────────────────────────────── */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; color: black !important; }
+}
 

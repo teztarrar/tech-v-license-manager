@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Modal, Button, Input, Select, Card, Badge, EmptyState } from '@/components/ui'
 import { Plus, Edit2, Trash2, Users, Shield, Eye, Lock } from 'lucide-react'
@@ -89,11 +88,10 @@ export default function UsersPage() {
             { role: 'MANAGER', label: 'Managers', color: 'from-brand-600/20 to-brand-800/10 border-brand-500/20' },
             { role: 'VIEWER', label: 'Viewers', color: 'from-gray-600/20 to-gray-800/10 border-gray-500/20' },
           ].map((s, i) => (
-            <motion.div key={s.role} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className={`bg-gradient-to-br ${s.color} border rounded-2xl p-4`}>
+            <div key={s.role} className={`bg-gradient-to-br ${s.color} border rounded-2xl p-4 slide-up stagger-${i + 1}`}>
               <p className="text-2xl font-bold text-white">{users.filter(u => u.role === s.role).length}</p>
               <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -133,7 +131,7 @@ export default function UsersPage() {
                 </thead>
                 <tbody>
                   {users.map((u, i) => (
-                    <motion.tr key={u.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+                    <tr key={u.id}>
                       <td>
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
@@ -176,7 +174,7 @@ export default function UsersPage() {
                           </div>
                         </td>
                       )}
-                    </motion.tr>
+                    </tr>
                   ))}
                 </tbody>
               </table>

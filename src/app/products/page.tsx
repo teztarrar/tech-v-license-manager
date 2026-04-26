@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Modal, Button, Input, Select, Card, EmptyState } from '@/components/ui'
 import { Plus, Edit2, Trash2, Package, DollarSign, Tag, RefreshCw } from 'lucide-react'
@@ -92,7 +91,7 @@ export default function ProductsPage() {
                 </tr></thead>
                 <tbody>
                   {filtered.map((p, i) => (
-                    <motion.tr key={p.id} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} transition={{delay:i*0.04}}>
+                    <tr key={p.id}>
                       <td>
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
@@ -130,7 +129,7 @@ export default function ProductsPage() {
                           <button onClick={()=>setShowDelete(p)} className="p-1.5 rounded hover:bg-white/5 text-gray-500 hover:text-red-400 transition-colors"><Trash2 size={13}/></button>
                         </div>
                       </td>
-                    </motion.tr>
+                    </tr>
                   ))}
                 </tbody>
               </table>

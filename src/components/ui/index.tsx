@@ -227,7 +227,7 @@ export function Button({
   className?: string
   icon?: React.ReactNode
 }) {
-  const base = 'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed select-none'
+  const base = 'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed select-none btn-press'
 
   const variants: Record<ButtonVariant, string> = {
     primary:   'bg-[var(--brand-600)] hover:bg-[var(--brand-500)] text-white focus-visible:ring-[var(--brand-500)]',
@@ -243,11 +243,10 @@ export function Button({
   }
 
   return (
-    <motion.button
+    <button
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      whileTap={{ scale: 0.97 }}
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
     >
       {loading
@@ -255,7 +254,7 @@ export function Button({
         : icon && <span className="flex-shrink-0">{icon}</span>
       }
       {children}
-    </motion.button>
+    </button>
   )
 }
 

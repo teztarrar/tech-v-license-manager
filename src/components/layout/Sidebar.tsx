@@ -1,14 +1,14 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 import {
   LayoutDashboard, Key, Package, Building2, RefreshCw,
   Bell, BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Users,
+  CalendarDays, ClipboardList, Layers
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import { TechVLogo } from '../TechVLogo'
-import { useState } from 'react'
 
 const NAV = [
   { href: '/dashboard',     icon: LayoutDashboard, label: 'Dashboard'     },
@@ -16,8 +16,11 @@ const NAV = [
   { href: '/products',      icon: Package,         label: 'Products'      },
   { href: '/companies',     icon: Building2,       label: 'Companies'     },
   { href: '/renewals',      icon: RefreshCw,       label: 'Renewals'      },
+  { href: '/calendar',      icon: CalendarDays,    label: 'Calendar'      },
   { href: '/notifications', icon: Bell,            label: 'Notifications' },
   { href: '/reports',       icon: BarChart3,       label: 'Reports'       },
+  { href: '/activity',      icon: ClipboardList,   label: 'Activity'      },
+  { href: '/templates',     icon: Layers,          label: 'Templates'     },
   { href: '/users',         icon: Users,           label: 'Users'         },
   { href: '/settings',      icon: Settings,        label: 'Settings'      },
 ]
@@ -27,11 +30,13 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <motion.div
-      animate={{ width: collapsed ? 60 : 220 }}
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-      className="relative h-screen flex flex-col overflow-hidden flex-shrink-0"
-      style={{ background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border-subtle)' }}
+    <div
+      className="relative h-screen flex flex-col overflow-hidden flex-shrink-0 transition-all duration-200 ease-in-out"
+      style={{
+        width: collapsed ? 60 : 220,
+        background: 'var(--bg-sidebar)',
+        borderRight: '1px solid var(--border-subtle)'
+      }}
     >
       {/* Logo */}
       <div className="h-16 flex items-center px-3.5 flex-shrink-0"
@@ -45,8 +50,7 @@ export function Sidebar() {
           const active = pathname === item.href || pathname?.startsWith(item.href + '/')
           return (
             <Link key={item.href} href={item.href}>
-              <motion.div
-                whileTap={{ scale: 0.97 }}
+              <div
                 title={collapsed ? item.label : undefined}
                 className={[
                   'flex items-center gap-3 px-2.5 py-2.5 rounded-xl cursor-pointer transition-all relative group',
@@ -54,10 +58,7 @@ export function Sidebar() {
                     ? 'text-[var(--sidebar-active-text)]'
                     : 'text-[var(--sidebar-text)] hover:text-[var(--text-primary)]',
                 ].join(' ')}
-                style={active
-                  ? { background: 'var(--sidebar-active-bg)' }
-                  : undefined
-                }
+                style={active ? { background: 'var(--sidebar-active-bg)' } : undefined}
                 onMouseEnter={e => {
                   if (!active) (e.currentTarget as HTMLElement).style.background = 'var(--sidebar-hover)'
                 }}
@@ -66,19 +67,11 @@ export function Sidebar() {
                 }}
               >
                 <item.icon size={17} className="flex-shrink-0" />
-                <AnimatePresence>
-                  {!collapsed && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="text-sm font-medium whitespace-nowrap overflow-hidden"
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                {!collapsed && (
+                  <span className="text-sm font-medium whitespace-nowrap overflow-hidden slide-up">
+                    {item.label}
+                  </span>
+                )}
 
                 {/* Tooltip for collapsed */}
                 {collapsed && (
@@ -88,7 +81,7 @@ export function Sidebar() {
                     {item.label}
                   </div>
                 )}
-              </motion.div>
+              </div>
             </Link>
           )
         })}
@@ -110,16 +103,9 @@ export function Sidebar() {
           }}
         >
           <LogOut size={17} className="flex-shrink-0" />
-          <AnimatePresence>
-            {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="text-sm font-medium"
-              >
-                Sign Out
-              </motion.span>
-            )}
-          </AnimatePresence>
+          {!collapsed && (
+            <span className="text-sm font-medium slide-up">Sign Out</span>
+          )}
         </button>
       </div>
 
@@ -128,10 +114,10 @@ export function Sidebar() {
         onClick={() => setCollapsed(c => !c)}
         className="absolute -right-3 top-[72px] w-6 h-6 rounded-full flex items-center justify-center
                    bg-[var(--brand-600)] text-white shadow-lg hover:bg-[var(--brand-500)]
-                   transition-colors z-10 border-2 border-[var(--bg-main)]"
+                   transition-colors z-10 border-2 border-[var(--bg-main)] btn-press"
       >
         {collapsed ? <ChevronRight size={11} /> : <ChevronLeft size={11} />}
       </button>
-    </motion.div>
+    </div>
   )
 }

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { motion } from 'framer-motion'
 import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { useTheme, type Theme } from '@/components/ThemeProvider'
@@ -62,7 +61,7 @@ export default function LoginPage() {
   return (
     <div className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${bgGradient} p-4 relative overflow-hidden`}>
       {/* Particle background for dark themes */}
-      {isDark && <ParticleBackground particleCount={35} colors={
+      {isDark && <ParticleBackground particleCount={12} colors={
         activeTheme === 'ocean'
           ? ['#06b6d4', '#0ea5e9', '#22d3ee', '#67e8f9']
           : activeTheme === 'neon'
@@ -75,8 +74,8 @@ export default function LoginPage() {
       {/* Animated background blobs for light theme */}
       {!isDark && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
+          {[...Array(3)].map((_, i) => (
+            <div
               key={i}
               className="absolute rounded-full mesh-blob bg-indigo-400/10"
               style={{
@@ -86,19 +85,12 @@ export default function LoginPage() {
                 top: `${5 + i * 14}%`,
                 animationDelay: `${i * 1.2}s`,
               }}
-              animate={mounted ? { y: [0, -20, 0], scale: [1, 1.05, 1] } : {}}
-              transition={{ duration: 4 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.7 }}
             />
           ))}
         </div>
       )}
 
-      <motion.div
-        className="relative w-full max-w-md"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      >
+      <div className="relative w-full max-w-md slide-up">
         <div
           className="rounded-2xl p-8 shadow-2xl border backdrop-blur-xl"
           style={{
@@ -107,15 +99,9 @@ export default function LoginPage() {
           }}
         >
           <div className="flex justify-center mb-8">
-            <motion.div
-              className="rounded-2xl p-4"
-              style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.1 }}
-            >
+            <div className="rounded-2xl p-4 scale-in" style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' }}>
               <Logo size={40} />
-            </motion.div>
+            </div>
           </div>
 
           <h1 className={`text-xl font-semibold text-center mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -126,10 +112,7 @@ export default function LoginPage() {
           </p>
 
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="border text-sm px-4 py-3 rounded-xl mb-4"
+            <div className="border text-sm px-4 py-3 rounded-xl mb-4 slide-up"
               style={{
                 background: isDark ? 'rgba(239,68,68,0.15)' : 'rgba(239,68,68,0.08)',
                 borderColor: isDark ? 'rgba(239,68,68,0.3)' : 'rgba(239,68,68,0.2)',
@@ -137,15 +120,11 @@ export default function LoginPage() {
               }}
             >
               {error}
-            </motion.div>
+            </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.15 }}
-            >
+            <div className="slide-up">
               <label className={`text-xs font-medium block mb-1.5 ${isDark ? 'text-blue-200' : 'text-gray-600'}`}>
                 Email address
               </label>
@@ -163,13 +142,9 @@ export default function LoginPage() {
                   }`}
                 />
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+            <div className="slide-up stagger-2">
               <label className={`text-xs font-medium block mb-1.5 ${isDark ? 'text-blue-200' : 'text-gray-600'}`}>
                 Password
               </label>
@@ -194,30 +169,25 @@ export default function LoginPage() {
                   {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.button
+            <button
               type="submit"
               disabled={loading}
-              whileTap={{ scale: 0.98 }}
-              className={`w-full py-2.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-70 ${
+              className={`w-full py-2.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-70 btn-press slide-up stagger-3 ${
                 isDark
                   ? 'bg-blue-500 hover:bg-blue-400 text-white'
                   : 'bg-indigo-600 hover:bg-indigo-500 text-white'
-              }`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
-            >
+              }`}>
               {loading ? <><Loader2 size={15} className="animate-spin" /> Signing in...</> : 'Sign in'}
-            </motion.button>
+            </button>
           </form>
 
           <p className={`text-xs text-center mt-6 ${isDark ? 'text-blue-300/60' : 'text-gray-400'}`}>
             Default: admin@techv.com / admin123
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

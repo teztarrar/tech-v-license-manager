@@ -15,7 +15,7 @@ interface Particle {
 }
 
 export function ParticleBackground({
-  particleCount = 40,
+  particleCount = 8,
   colors = ['#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6'],
 }: {
   particleCount?: number
@@ -24,6 +24,7 @@ export function ParticleBackground({
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
   const rafRef = useRef<number>(0)
+  const lastTimeRef = useRef<number>(0)
 
   const initParticles = useCallback(
     (width: number, height: number) => {
@@ -32,12 +33,12 @@ export function ParticleBackground({
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          radius: Math.random() * 2 + 1,
-          opacity: Math.random() * 0.5 + 0.2,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          radius: Math.random() * 1.5 + 1,
+          opacity: Math.random() * 0.4 + 0.2,
           color: colors[Math.floor(Math.random() * colors.length)],
-          pulseSpeed: Math.random() * 0.02 + 0.01,
+          pulseSpeed: Math.random() * 0.015 + 0.008,
           pulseOffset: Math.random() * Math.PI * 2,
         })
       }
@@ -62,26 +63,29 @@ export function ParticleBackground({
     window.addEventListener('resize', resize)
 
     const animate = (time: number) => {
+      // Throttle to ~30fps for performance
+      if (time - lastTimeRef.current < 33) {
+        rafRef.current = requestAnimationFrame(animate)
+        return
+      }
+      lastTimeRef.current = time
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       const particles = particlesRef.current
 
-      // Update and draw particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i]
         p.x += p.vx
         p.y += p.vy
 
-        // Wrap around edges
         if (p.x < -10) p.x = canvas.width + 10
         if (p.x > canvas.width + 10) p.x = -10
         if (p.y < -10) p.y = canvas.height + 10
         if (p.y > canvas.height + 10) p.y = -10
 
-        // Pulse opacity
         const pulse = Math.sin(time * p.pulseSpeed + p.pulseOffset) * 0.3 + 0.7
         const currentOpacity = p.opacity * pulse
 
-        // Glow
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 3)
         gradient.addColorStop(0, p.color.replace(')', `, ${currentOpacity})`).replace('rgb', 'rgba').replace('#', ''))
         gradient.addColorStop(1, 'transparent')
@@ -91,27 +95,10 @@ export function ParticleBackground({
         ctx.fillStyle = gradient
         ctx.fill()
 
-        // Core
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
         ctx.fillStyle = p.color.replace(')', `, ${currentOpacity})`)
         ctx.fill()
-
-        // Draw connections
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j]
-          const dx = p.x - p2.x
-          const dy = p.y - p2.y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 150) {
-            ctx.beginPath()
-            ctx.moveTo(p.x, p.y)
-            ctx.lineTo(p2.x, p2.y)
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.08 * (1 - dist / 150)})`
-            ctx.lineWidth = 0.5
-            ctx.stroke()
-          }
-        }
       }
 
       rafRef.current = requestAnimationFrame(animate)
@@ -133,4 +120,3 @@ export function ParticleBackground({
     />
   )
 }
-

@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Modal, Button, Input, Select, Card, EmptyState, useToast, SkeletonTable } from '@/components/ui'
 import { Plus, Search, Download, Upload, RefreshCw, Edit2, Trash2, Key, Copy, CheckCheck } from 'lucide-react'
@@ -239,11 +238,8 @@ export default function LicensesPage() {
                   {licenses.map((lic, i) => {
                     const days = getDaysUntilExpiry(lic.expiryDate)
                     return (
-                      <motion.tr
+                      <tr
                         key={lic.id}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: Math.min(i * 0.02, 0.4) }}
                       >
                         <td>
                           <div className="flex items-center gap-2">
@@ -298,7 +294,7 @@ export default function LicensesPage() {
                             <button onClick={() => setShowDelete(lic)} title="Delete" className="p-1.5 rounded-lg hover:bg-white/5 text-gray-500 hover:text-red-400 transition-colors"><Trash2 size={13} /></button>
                           </div>
                         </td>
-                      </motion.tr>
+                      </tr>
                     )
                   })}
                 </tbody>

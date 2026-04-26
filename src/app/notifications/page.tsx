@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { Button, Card, EmptyState, PageSpinner } from '@/components/ui'
 import { Bell, CheckCheck, Trash2, AlertTriangle, XCircle, RefreshCw, Info } from 'lucide-react'
@@ -86,13 +85,13 @@ export default function NotificationsPage() {
         ) : (
           <div className="space-y-2">
             {filtered.map((n, i) => (
-              <motion.div
-                key={n.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.03 }}
+              <div key={n.id}
                 onClick={() => !n.read && markRead(n.id)}
-                className={`flex items-start gap-4 p-4 rounded-xl border transition-all cursor-pointer group ${
+                style={{
+                  borderBottom: '1px solid var(--border-subtle)',
+                  background: !n.read ? 'var(--bg-hover)' : undefined,
+                }}
+                className={`flex items-start gap-4 p-4 rounded-xl border transition-all cursor-pointer group slide-up ${
                   typeBg[n.type] || typeBg.DEFAULT
                 } ${!n.read ? 'opacity-100' : 'opacity-60'}`}
               >
@@ -117,7 +116,7 @@ export default function NotificationsPage() {
                   </button>
                 </div>
                 {!n.read && <div className="w-2 h-2 rounded-full bg-brand-500 mt-1.5 flex-shrink-0"/>}
-              </motion.div>
+              </div>
             ))}
           </div>
         )}
